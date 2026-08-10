@@ -89,34 +89,96 @@
       }
     }
 
-    // Click-to-play keeps heavy MP4 off the initial load (Core Web Vitals)
+    // Click-to-play: Cloudflare Workers assets often lack HTTP Range support,
+    // which breaks progressive MP4 playback — load via blob when needed.
     document.querySelectorAll(".video-poster-play").forEach(function (wrap) {
-      var play = function () {
-        var src = wrap.getAttribute("data-video-src");
-        var container = wrap.parentElement;
-        if (!container || !src) return;
-        var video = container.querySelector(".hero-lazy-video");
-        if (!video) return;
-        var source = video.querySelector("source");
-        if (source && !source.getAttribute("src")) {
-          source.setAttribute("src", source.getAttribute("data-src") || src);
-        }
+      var busy = false;
+
+      var reveal = function (video, container) {
         wrap.hidden = true;
         video.hidden = false;
-        try {
-          video.load();
-          var p = video.play();
-          if (p && typeof p.catch === "function") p.catch(function () {});
-        } catch (e) {}
+        if (container) container.classList.add("is-playing");
+        var p = video.play();
+        if (p && typeof p.catch === "function") {
+          p.catch(function () {
+            video.setAttribute("controls", "");
+          });
+        }
       };
+
+      var playFromBlob = function (video, container, src, btn) {
+        return fetch(src)
+          .then(function (res) {
+            if (!res.ok) throw new Error("video fetch failed");
+            return res.blob();
+          })
+          .then(function (blob) {
+            video.src = URL.createObjectURL(blob);
+            video.load();
+            reveal(video, container);
+          })
+          .catch(function () {
+            busy = false;
+            if (btn) btn.textContent = "Play preview";
+          });
+      };
+
+      var play = function (e) {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        if (busy) return;
+        busy = true;
+
+        var src = wrap.getAttribute("data-video-src");
+        var container = wrap.parentElement;
+        if (!container || !src) {
+          busy = false;
+          return;
+        }
+        var video = container.querySelector(".hero-lazy-video");
+        if (!video) {
+          busy = false;
+          return;
+        }
+
+        var btn = wrap.querySelector(".video-play-btn");
+        if (btn) btn.textContent = "Loading…";
+
+        // Prefer direct URL first (fast on caches that support it)
+        video.removeAttribute("src");
+        while (video.firstChild) video.removeChild(video.firstChild);
+        video.src = src;
+        video.setAttribute("playsinline", "");
+        video.setAttribute("webkit-playsinline", "");
+        video.controls = true;
+
+        var settled = false;
+        var finishOk = function () {
+          if (settled) return;
+          settled = true;
+          reveal(video, container);
+        };
+        var finishBlob = function () {
+          if (settled) return;
+          settled = true;
+          playFromBlob(video, container, src, btn);
+        };
+
+        video.addEventListener("loadeddata", finishOk, { once: true });
+        video.addEventListener("error", finishBlob, { once: true });
+        video.load();
+
+        // If the file hangs (common without Accept-Ranges), fall back to blob
+        setTimeout(function () {
+          if (!settled && video.readyState < 2) finishBlob();
+        }, 1800);
+      };
+
       wrap.addEventListener("click", play);
       var btn = wrap.querySelector(".video-play-btn");
-      if (btn) {
-        btn.addEventListener("click", function (e) {
-          e.preventDefault();
-          play();
-        });
-      }
+      if (btn) btn.addEventListener("click", play);
     });
   });
 })();

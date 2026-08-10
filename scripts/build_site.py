@@ -13,8 +13,8 @@ BLOG = "blog.html"
 GUIDE = "guide.html"
 CONTACT = "contact.html"
 PRODUCT = BUY
-CSS = "css/site.css"
-JS = "js/site.js"
+CSS = "css/site.css?v=5"
+JS = "js/site.js?v=5"
 LOGO = "images/logo.webp"
 FAV = "images/favicon.png"
 HERO_WEBP = "images/hero-bg.webp"
@@ -232,10 +232,7 @@ def local_video_block(src, title):
 <img src="{HERO_WEBP}" width="960" height="540" alt="{esc(title)} poster" loading="lazy" decoding="async">
 <button type="button" class="video-play-btn">Play preview</button>
 </div>
-<video class="hero-lazy-video" controls playsinline preload="none" title="{esc(title)}" poster="{HERO_WEBP}" hidden>
-<source data-src="{src}" type="video/mp4">
-Your browser does not support the video tag.
-</video>
+<video class="hero-lazy-video" controls playsinline webkit-playsinline preload="none" title="{esc(title)}" poster="{HERO_WEBP}" data-src="{src}" hidden></video>
 </div>"""
 
 
@@ -278,10 +275,7 @@ def build_home():
 <img src="{HERO_WEBP}" width="640" height="400" alt="Warzone live preview poster" decoding="async" loading="lazy">
 <button type="button" class="video-play-btn">Play preview</button>
 </div>
-<video class="hero-lazy-video" controls playsinline preload="none" poster="{HERO_WEBP}" title="Warzone live preview gameplay" hidden>
-<source data-src="{HERO_VIDEO}" type="video/mp4">
-Your browser does not support the video tag.
-</video>
+<video class="hero-lazy-video" controls playsinline webkit-playsinline preload="none" poster="{HERO_WEBP}" title="Warzone live preview gameplay" data-src="{HERO_VIDEO}" hidden></video>
 </div>
 <span class="badge">Undetected build · Multi-game</span>
 </div>
