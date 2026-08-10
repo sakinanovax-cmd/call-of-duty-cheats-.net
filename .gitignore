@@ -1,0 +1,18 @@
+# Local / tooling junk
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+_tmp_*.txt
+
+# Lighthouse / temp audit outputs
+scripts/lighthouse*.json
+scripts/_*.py
+scripts/_check_*.py
+
+# Python virtualenvs
+.venv/
+venv/
+ENV/
