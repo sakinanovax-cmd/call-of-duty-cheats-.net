@@ -32,7 +32,7 @@ else:
 GP = [f"images/gameplay/cod-{i:02d}.webp" for i in range(1, 21)]
 GP_CREDIT = 'Gameplay stills via <a href="https://www.ign.com/games/call-of-duty-warzone" rel="noopener noreferrer" target="_blank">IGN</a>. Overlay menus appear in the live preview after purchase — these photos are match atmosphere.'
 
-HERO_VIDEO = "videos/hero-preview.mp4"
+HERO_VIDEO = "videos/hero-preview-cf.mp4"
 YT_INNER = "https://www.youtube-nocookie.com/embed/a3VN_Hp5qtI"
 
 

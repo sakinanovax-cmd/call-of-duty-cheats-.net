@@ -1,0 +1,27 @@
+# Keep build/tooling out of Cloudflare asset upload
+scripts/
+*.py
+*.pyc
+__pycache__/
+.git/
+.gitignore
+wrangler.jsonc
+package.json
+package-lock.json
+node_modules/
+QA-CHECKLIST.md
+_tmp_*.txt
+.venv/
+venv/
+
+# Oversized original preview (GitHub/local only) — Cloudflare max is 25 MiB
+videos/hero-preview.mp4
+videos/hero-preview-small.mp4
+
+# Prefer WebP on site; skip bulky JPG duplicates in gameplay folder
+images/gameplay/*.jpg
+images/hero-bg.jpg
+images/hero-bg-themed.jpg
+images/hero-source.jpg
+images/hero-themed-square.jpg
+images/logo.png

@@ -7,6 +7,10 @@ Thumbs.db
 .idea/
 _tmp_*.txt
 
+# Oversized original preview (use videos/hero-preview-cf.mp4 for deploy)
+videos/hero-preview.mp4
+videos/hero-preview-small.mp4
+
 # Lighthouse / temp audit outputs
 scripts/lighthouse*.json
 scripts/_*.py
@@ -16,3 +20,8 @@ scripts/_check_*.py
 .venv/
 venv/
 ENV/
+
+# Wrangler
+.wrangler/
+.dev.vars
+
