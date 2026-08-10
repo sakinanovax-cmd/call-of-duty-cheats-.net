@@ -13,8 +13,10 @@ BLOG = "blog.html"
 GUIDE = "guide.html"
 CONTACT = "contact.html"
 PRODUCT = BUY
-CSS = "css/site.css?v=5"
-JS = "js/site.js?v=5"
+CSS_FILE = "css/site.css"
+JS_FILE = "js/site.js"
+CSS = f"{CSS_FILE}?v=5"
+JS = f"{JS_FILE}?v=5"
 LOGO = "images/logo.webp"
 FAV = "images/favicon.png"
 HERO_WEBP = "images/hero-bg.webp"
@@ -1131,7 +1133,7 @@ def cleanup_old_blogs(keep):
 
 
 def ensure_article_css():
-    css_path = ROOT / CSS
+    css_path = ROOT / CSS_FILE
     css = css_path.read_text(encoding="utf-8")
     if ".article-wrap" not in css:
         css += """
